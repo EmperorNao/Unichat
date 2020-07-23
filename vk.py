@@ -4,8 +4,16 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import random
 
 
-token = "130238bd599aabd7f8d252debd4ee41eb7d05507929b4d744cc3a1eafc6f98e27d4342c58ebabd0e87c26"
-group_id = '195460898'
+# init some vk configs
+def vk_init():
+    s = open('configs/vk_config.txt', "r", encoding="UTF-8").read()
+    t = []
+    for line in s.split('\n'):
+        t.append(line)
+    return t[0], t[1]
+
+
+token, group_id = vk_init()
 vk_session = vk_api.VkApi(token=token)
 vk = vk_session.get_api()
 longpoll = VkBotLongPoll(vk_session, group_id=group_id)

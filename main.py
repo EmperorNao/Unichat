@@ -1,11 +1,14 @@
 from db import Database
 from vk import *
-from config import conf
+from config import init_config
+import pymysql
 letter = 'letter.txt'
 
-
-
-db = Database()
+try:
+    config = init_config().get_settings()
+    db = Database(config)
+except:
+    print('Не удаётся подключиться к БД')
 while True:
 
     for event in longpoll.listen():

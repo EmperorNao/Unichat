@@ -14,12 +14,12 @@ TIME = 20
 
 class Database():
 
-    def __init__(self, host, user, password, db_name):
+    def __init__(self, config):
 
-        self.host = host
-        self.user = user
-        self.password = password
-        self.db = db_name
+        self.host = config['host']
+        self.user = config['user']
+        self.password = config['password']
+        self.db = config['db']
         self.connection = self.get_connection()
 
     # connect to db
