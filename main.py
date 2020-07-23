@@ -2,12 +2,13 @@ from db import Database
 from vk import *
 from config import init_config
 import pymysql
-letter = 'letter.txt'
+letter = 'config/letter.txt'
+
 
 try:
     config = init_config().get_settings()
     db = Database(config)
-except:
+except pymysql.err.OperationalError:
     print('Не удаётся подключиться к БД')
 while True:
 

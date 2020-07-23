@@ -1,5 +1,4 @@
-
-class Config():
+class Config:
 
     def __init__(self, host='localhost', user='root', password='password', db_name=None):
         self.host = host
@@ -14,7 +13,9 @@ class Config():
                     db=self.db)
 
 
+# init config for db
 def init_config():
+
     print('Файловый ввод, а не консольный: (Y/N)')
     t = input().lower()
     if t == 'y':

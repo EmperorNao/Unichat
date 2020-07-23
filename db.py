@@ -12,7 +12,7 @@ TIME = 20
 #   3 - response to data offer
 
 
-class Database():
+class Database:
 
     def __init__(self, config):
 
@@ -150,7 +150,6 @@ class Database():
 
         return a
 
-
     # is user_id in db
     def is_in(self, user_id):
 
@@ -256,20 +255,3 @@ class Database():
             if timing > TIME:
                 vk_send(i['user_id'], 'Время диалога истекло. Желаете ли вы продолжить общение?', 3)
                 self.change_state(i['user_id'], 3)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

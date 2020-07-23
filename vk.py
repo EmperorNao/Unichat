@@ -24,23 +24,23 @@ def get_button(mode):
 
     if mode == 0:
 
-        return 'keyboard\start.json'
+        return 'keyboard/start.json'
 
     elif mode == 1:
 
-        return 'keyboard\ew.json'
+        return 'keyboard/ew.json'
 
     elif mode == 2:
 
-        return 'keyboard\dialog.json'
+        return 'keyboard/dialog.json'
 
     elif mode == 3:
 
-        return 'keyboard\swer.json'
+        return 'keyboard/swer.json'
 
     else:
 
-        return 'keyboard\default.json'
+        return 'keyboard/default.json'
 
 
 # send message to user_id in vk with button mode
