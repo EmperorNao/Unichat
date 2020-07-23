@@ -1,0 +1,14 @@
+{
+  "one_time": true,
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Начать новый диалог"
+        },
+        "color": "primary"
+      }
+    ]
+  ]
+}
