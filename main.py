@@ -1,8 +1,11 @@
-from db import *
+from db import Database
 from vk import *
-
+from config import conf
 letter = 'letter.txt'
 
+
+
+db = Database()
 while True:
 
     for event in longpoll.listen():
