@@ -26,9 +26,9 @@ while True:
                     response = 'vk.com/id116895282 и vk.com/id209646771'
                     vk_send(user_id, response, -1)
 
-                if is_connected(user_id):
+                if db.is_connected(user_id):
 
-                    user_id_for_sending = find_user_id_for_sending(user_id)
+                    user_id_for_sending = db.find_user_id_for_sending(user_id)
 
                     if message.lower() == 'прекратить общение':
 
@@ -36,54 +36,54 @@ while True:
 
                         mode = 0
 
-                        if is_response(user_id):
+                        if db.is_response(user_id):
 
                             mode = 3
 
-                        if is_connected(user_id) or is_connected(user_id):
+                        if db.is_connected(user_id) or db.is_connected(user_id):
 
                             mode = 1
 
                         vk_send(user_id_for_sending, response, mode)
                         vk_send(user_id, 'Диалог окончен', 1)
-                        end_dialog(user_id)
-                        end_dialog(user_id_for_sending)
+                        db.end_dialog(user_id)
+                        db.end_dialog(user_id_for_sending)
 
                     else:
 
                         vk_send(user_id_for_sending, message, 2)
 
-                elif is_in(user_id) and message.lower() == 'найти собеседника':
+                elif db.is_in(user_id) and message.lower() == 'найти собеседника':
 
-                    change_state(user_id, 1)
+                    db.change_state(user_id, 1)
 
-                elif is_response(user_id):
+                elif db.is_response(user_id):
 
-                    user_id_for_sending = find_user_id_for_sending(user_id)
+                    user_id_for_sending = db.find_user_id_for_sending(user_id)
 
                     if message.lower() == 'да':
 
                         response = 'Ваш собеседник хочет продолжить общение. vk.com/id'+str(user_id)
                         vk_send(user_id_for_sending, response, 1)
                         vk_send(user_id, 'Сообщение было отправлено', 1)
-                        end_dialog(user_id)
+                        db.end_dialog(user_id)
 
                     if message.lower() == 'нет':
 
                         response = 'Ваш собеседник отказался продолжить общение с вами'
                         vk_send(user_id_for_sending, response, 1)
                         vk_send(user_id, 'Сообщение было отправлено', 1)
-                        end_dialog(user_id)
+                        db.end_dialog(user_id)
 
                 elif message.lower() == 'начать новый диалог' and not is_in(user_id):
 
                     response = 'Вы были добавлены в список'
-                    register_in_db(user_id)
+                    db.register_in_db(user_id)
                     vk_send(user_id, response, 1)
 
-            searching_for_dialog()
+            db.searching_for_dialog()
 
-            check_start_time()
+            db.check_start_time()
 
         elif event.type == VkBotEventType.GROUP_JOIN:
 

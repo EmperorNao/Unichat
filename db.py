@@ -170,7 +170,7 @@ class Database:
 
         return self.get_current_state(user_id) == 3
 
-    # return for user_id
+    # return user_id_for_sending for user_id
     def find_user_id_for_sending(self, user_id):
 
         if self.is_connected(user_id) or self.is_response(user_id):

@@ -28,7 +28,7 @@ def get_button(mode):
 
     elif mode == 1:
 
-        return 'keyboard/ew.json'
+        return 'keyboard/new.json'
 
     elif mode == 2:
 
@@ -36,7 +36,7 @@ def get_button(mode):
 
     elif mode == 3:
 
-        return 'keyboard/swer.json'
+        return 'keyboard/answer.json'
 
     else:
 
