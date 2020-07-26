@@ -3,7 +3,7 @@ import random
 from vk import vk_send
 import datetime
 
-TIME = 20
+TIME = 1200
 
 # STATES
 #   0 - in DB
@@ -20,7 +20,6 @@ class Database:
         self.user = config['user']
         self.password = config['password']
         self.db = config['db']
-        self.connection = self.get_connection()
 
     # connect to db
     def get_connection(self):
@@ -37,7 +36,8 @@ class Database:
     # add user_id
     def register_in_db(self, user_id):
 
-        cursor = self.connection.cursor()
+        connection = self.get_connection()
+        cursor = connection.cursor()
 
         sql = "SELECT user_id FROM registr WHERE user_id = %s"
         cursor.execute(sql, user_id)
@@ -50,59 +50,63 @@ class Database:
             sql = "INSERT INTO registr(user_id) VALUES (%s)"
             cursor.execute(sql, user_id)
             sql = "INSERT INTO user_info(user_id,user_id_for_sending,start_" \
-                  "time,state) VALUES(%s,0,SYSDATE(),0)"
+                  r"time,state,messages) VALUES(%s,0,SYSDATE(),0,'\n')"
             cursor.execute(sql, user_id)
 
-        self.connection.commit()
-        self.connection.close()
+        connection.commit()
+        connection.close()
 
     # change column state to "state" for user_id
     def change_state(self, user_id, state):
 
-        cursor = self.connection.cursor()
+        connection = self.get_connection()
+        cursor = connection.cursor()
 
         sql = 'UPDATE user_info SET state = %s WHERE user_id = %s' % (state, user_id)
         cursor.execute(sql)
 
-        self.connection.commit()
-        self.connection.close()
+        connection.commit()
+        connection.close()
 
     # update column time with sysdate for user_id
     def add_datetime(self, user_id, time):
 
-        cursor = self.connection.cursor()
+        connection = self.get_connection()
+        cursor = connection.cursor()
 
         sql = 'UPDATE user_info SET %s = SYSDATE() WHERE user_id = %s' % (time, user_id)
         cursor.execute(sql)
 
-        self.connection.commit()
-        self.connection.close()
+        connection.commit()
+        connection.close()
 
     # end dialog for user_id
     def end_dialog(self, user_id):
 
-        cursor = self.connection.cursor()
+        connection = self.get_connection()
+        cursor = connection.cursor()
 
         sql = 'UPDATE user_info SET user_id_for_sending = 0 WHERE user_id = %s'
         cursor.execute(sql, user_id)
 
-        self.connection.commit()
-        self.connection.close()
+        connection.commit()
+        connection.close()
 
         self.change_state(user_id, 0)
 
     # connect user_id and user_id_for_sending
     def start_dialog(self, user_id, user_id_for_sending):
 
-        cursor = self.connection.cursor()
+        connection = self.get_connection()
+        cursor = connection.cursor()
 
         sql = "UPDATE user_info SET user_id_for_sending = %s WHERE user_id = %s" % (user_id_for_sending, user_id)
         cursor.execute(sql)
         sql = "UPDATE user_info SET user_id_for_sending = %s WHERE user_id = %s" % (user_id, user_id_for_sending)
         cursor.execute(sql)
 
-        self.connection.commit()
-        self.connection.close()
+        connection.commit()
+        connection.close()
 
         self.add_datetime(user_id, "start_time")
         self.add_datetime(user_id_for_sending, "start_time")
@@ -113,14 +117,15 @@ class Database:
     # get current state for user_id
     def get_current_state(self, user_id):
 
-        cursor = self.connection.cursor()
+        connection = self.get_connection()
+        cursor = connection.cursor()
 
         test = "SELECT state FROM user_info WHERE user_id = %s"
         cursor.execute(test, user_id)
         view = cursor.fetchall()
 
-        self.connection.commit()
-        self.connection.close()
+        connection.commit()
+        connection.close()
 
         # почему только иф? посмотреть позже
         if view != ():
@@ -136,7 +141,8 @@ class Database:
     # count how many users are in state 1
     def count_in_search(self):
 
-        cursor = self.connection.cursor()
+        connection = self.get_connection()
+        cursor = connection.cursor()
 
         sql = "SELECT COUNT(*) FROM user_info WHERE state = 1"
         cursor.execute(sql)
@@ -145,8 +151,8 @@ class Database:
         for i in cursor:
             a = i["COUNT(*)"]
 
-        self.connection.commit()
-        self.connection.close()
+        connection.commit()
+        connection.close()
 
         return a
 
@@ -175,14 +181,15 @@ class Database:
 
         if self.is_connected(user_id) or self.is_response(user_id):
 
-            cursor = self.connection.cursor()
+            connection = self.get_connection()
+            cursor = connection.cursor()
 
             sql = "SELECT user_id_for_sending FROM user_info WHERE user_id = %s"
             cursor.execute(sql, user_id)
             view = cursor.fetchall()
 
-            self.connection.commit()
-            self.connection.close()
+            connection.commit()
+            connection.close()
 
             user_id_for_sending = list(view[0].values())[0]
 
@@ -194,7 +201,8 @@ class Database:
 
             if active > 1:
 
-                cursor = self.connection.cursor()
+                connection = self.get_connection()
+                cursor = connection.cursor()
 
                 user_send = random.randrange(1, active)
 
@@ -202,8 +210,8 @@ class Database:
                 cursor.execute(sql, user_id)
                 view = cursor.fetchall()
 
-                self.connection.commit()
-                self.connection.close()
+                connection.commit()
+                connection.close()
 
                 user_id_for_sending = list(view[user_send - 1].values())[0]
 
@@ -216,7 +224,8 @@ class Database:
     # connect all users, who is searching for dialog
     def searching_for_dialog(self):
 
-        cursor = self.connection.cursor()
+        connection = self.get_connection()
+        cursor = connection.cursor()
 
         sql = "SELECT user_id FROM user_info WHERE state = 1"
         cursor.execute(sql)
@@ -236,17 +245,21 @@ class Database:
             cursor.execute(sql)
             view = cursor.fetchall()
 
+            connection.commit()
+            connection.close()
+
     # change state to 3 for all users, which start_time is more than 10 min
     def check_start_time(self):
 
-        cursor = self.connection.cursor()
+        connection = self.get_connection()
+        cursor = connection.cursor()
 
         sql = "SELECT * FROM user_info WHERE state = 2"
         cursor.execute(sql)
         view = cursor.fetchall()
 
-        self.connection.commit()
-        self.connection.close()
+        connection.commit()
+        connection.close()
 
         for i in view:
 
@@ -255,3 +268,17 @@ class Database:
             if timing > TIME:
                 vk_send(i['user_id'], 'Время диалога истекло. Желаете ли вы продолжить общение?', 3)
                 self.change_state(i['user_id'], 3)
+
+    # save message from user_id to database
+    def save_message(self, user_id, message):
+
+        connection = self.get_connection()
+        cursor = connection.cursor()
+        message = str(str(datetime.datetime.now()) + '   ' + message + '\n')
+
+        print(message, type(message))
+        sql = "UPDATE user_info SET messages = CONCAT(messages,'%s') WHERE user_id =%s" % (message, user_id)
+        cursor.execute(sql)
+
+        connection.commit()
+        connection.close()

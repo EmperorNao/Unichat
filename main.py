@@ -2,14 +2,18 @@ from db import Database
 from vk import *
 from config import init_config
 import pymysql
-letter = 'config/letter.txt'
+letter = 'configs/letter.txt'
 
 
 try:
     config = init_config().get_settings()
     db = Database(config)
+
 except pymysql.err.OperationalError:
     print('Не удаётся подключиться к БД')
+    quit()
+
+
 while True:
 
     for event in longpoll.listen():
@@ -20,6 +24,7 @@ while True:
 
                 user_id = event.object.message['peer_id']
                 message = event.message['text']
+                db.save_message(user_id, message)
 
                 if message.lower() == 'кто тебя создал?':
 
@@ -29,6 +34,13 @@ while True:
                 if db.is_connected(user_id):
 
                     user_id_for_sending = db.find_user_id_for_sending(user_id)
+
+                    if message.lower() == "отправить свои контакты":
+
+                        response = 'Ваш собеседник хочет продолжить общение. vk.com/id' + str(user_id)
+                        vk_send(user_id_for_sending, response, 1)
+                        vk_send(user_id, 'Сообщение было отправлено', 1)
+                        db.end_dialog(user_id)
 
                     if message.lower() == 'прекратить общение':
 
@@ -75,7 +87,7 @@ while True:
                         vk_send(user_id, 'Сообщение было отправлено', 1)
                         db.end_dialog(user_id)
 
-                elif message.lower() == 'начать новый диалог' and not is_in(user_id):
+                elif message.lower() == 'начать новый диалог' and not db.is_in(user_id):
 
                     response = 'Вы были добавлены в список'
                     db.register_in_db(user_id)

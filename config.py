@@ -31,4 +31,4 @@ def init_config():
         user = input()
         print('Введите пароль:')
         password = input()
-    return Config(host, user, password)
+    return Config(host, user, password, 'unichat')
