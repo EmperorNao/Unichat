@@ -1,0 +1,23 @@
+{
+  "one_time": false,
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Отправить свои контакты"
+        },
+        "color": "positive"
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "label": "Прекратить общение"
+        },
+        "color": "negative"
+      }
+    ]
+  ]
+}
