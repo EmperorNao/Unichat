@@ -1,14 +1,14 @@
 # Unichat
  VK bot for dating with new people
- \n
- \n
- To start:\n
- Create 2 .txt files with names 'db_config.txt' and 'vk_config.txt' with structure as lower:\n
- db_config.txt:\n
- hostname\n
- username\n
- password\n
- vk_config.txt:\n
- token\n
- group_id\n
- When start, choose Y(y) if you want to download settings for database from db_config.txt.\n
+<br />
+<br />
+ To start: <br />
+ Create 2 .txt files with names 'db_config.txt' and 'vk_config.txt' with structure as lower:<br />
+ db_config.txt:<br />
+ hostname<br />
+ username<br />
+ password<br />
+ vk_config.txt:<br />
+ token<br />
+ group_id<br />
+ When start, choose Y(y) if you want to download settings for database from db_config.txt.<br />
